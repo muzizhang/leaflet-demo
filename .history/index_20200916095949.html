@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #mapid {
+        height: 100vh;
+      }
+      /* .leaflet-right {
+      width: 100%;
+      height: 100%;
+    }
+    .leaflet-left {
+      z-index: 99999;
+    } */
+    </style>
+  </head>
+  <body>
+    <div id="mapid"></div>
+    <script>
+      // 获取图片的大小
+      var imageUrl = './img/企业微信截图_16000543948073.png'
+      let img = new Image()
+      img.src = imageUrl
+      let width = 0
+      let height = 0
+      function gcd(width, height) {
+        if (width % height) {
+          return gcd(height, width % height)
+        } else {
+          return height
+        }
+      }
+
+      img.onload = function () {
+        width = img.width
+        height = img.height
+        let n = gcd(width, height)
+        console.log(n)
+        console.log(width / n, height / n)
+        // 判断最大公约数的值
+        /*
+              为 1 则调用部分指定值
+             */
+        var imageBounds = []
+        if (n == 1) {
+          if (width / n - height / n > 300) {
+            imageBounds = [
+              [`8.00`, `-3.00`],
+              [`8.0${height / n}`, `-3.${width / n}`],
+            ]
+          } else {
+            imageBounds = [
+              [`8.00`, `-3.00`],
+              [`8.0${height / n}`, `-3.0${width / n}`],
+            ]
+          }
+        } else if (n > 0) {
+          imageBounds = [
+            [`${width / n}.00`, `-${height / n}.00`],
+            [`${width / n}.0${height / n}`, `-${height / n}.0${width / n}`],
+          ]
+        }
+
+        console.log(imageBounds)
+        var map = L.map('mapid', {
+          zoomSnap: 0.1,
+          minZoom: 13,
+          maxZoom: 16,
+          center: [
+            (parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2,
+            (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2,
+          ],
+          zoom: 14,
+          attributionControl: false,
+          renderer: L.canvas(),
+        })
+        console.log([
+          (parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2,
+          (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2,
+        ])
+        L.imageOverlay(imageUrl, imageBounds).addTo(map)
+
+        // 画点
+        // map.on('click',function(e){
+        //   L.circle(e.latlng,{radius:100,color:'red',fillColor:'red',fillOpacity:1}).addTo(map)
+        // })
+        // 绘制一个任意半径的圆
+        // var r = 0;
+        // var i = null;
+        // var tempCircle = new L.circle()
+        // map.on('mousedown', onmouseDown)
+        // map.on('mouseup',onmouseUp);
+        // map.on('mousemove',onMove)
+
+        // function onmouseDown(e)
+        // {
+        //     i=e.latlng
+        //     //确定圆心
+        // }
+        // function onMove(e) {
+        //     if(i) {
+        //         r = L.latLng(e.latlng).distanceTo(i)
+        //         tempCircle.setLatLng(i)
+        //         tempCircle.setRadius(r)
+        //         tempCircle.setStyle({color:'#ff0000',fillColor:'#ff0000',fillOpacity:1})
+        //         map.addLayer(tempCircle)
+
+        //     }
+        // }
+
+        // function onmouseUp(e)
+        // {
+        //     r = L.latLng(e.latlng).distanceTo(i)//计算半径
+        //     L.circle(i,{radius:r,color:'#ff0000',fillColor:'#ff0000',fillOpacity:1}).addTo(map)
+        //     i=null
+        //     r=0
+        // }
+
+        // 绘线
+        // var points = [],geometry=[]
+        // var lines = new L.polyline(points)
+        // var tempLines = new L.polyline([])
+        // map.on('click', onClick);    //点击地图
+        // map.on('dblclick', onDoubleClick);
+        // function onClick(e) {
+        //   points.push([e.latlng.lat, e.latlng.lng])
+        //   lines.addLatLng(e.latlng)
+        //   map.addLayer(lines)
+        //   const node=L.circle(e.latlng, { color: '#ff0000', fillColor: 'ff0000', fillOpacity: 1 })
+        //   map.addLayer(node)
+        //   geometry.push(node)
+        //   map.on('mousemove', onMove)//双击地图
+
+        // }
+        // function onMove(e) {
+        //   if (points.length > 0) {
+        //       ls = [points[points.length - 1], [e.latlng.lat, e.latlng.lng]]
+        //       tempLines.setLatLngs(ls)
+        //       map.addLayer(tempLines)
+        //   }
+        // }
+
+        // function onDoubleClick(e) {
+        //   geometry.push(L.polyline(points).addTo(map))
+        //   points = []
+        //   lines.remove();
+        //   map.off('mousemove')
+        //   tempLines.remove();
+        // }
+
+        // 绘制多边形
+        // var points = []
+        // // 创建一个折线的类
+        // var lines = new L.polyline([])
+        // var tempLines = new L.polyline([])
+        // map.on('click', onClick) //点击地图
+        // map.on('dblclick', onDoubleClick)
+        // map.on('mousemove', onMove)
+
+        // function onClick(e) {
+        //   points.push([e.latlng.lat, e.latlng.lng])
+        //   // 向折线添加一个给定点
+        //   lines.addLatLng(e.latlng)
+        //   // 添加一个图层到图层组中
+        //   map.addLayer(lines)
+        //   // 创建圆点
+        //   map.addLayer(
+        //     L.circle(e.latlng, {
+        //       color: '#ff0000',
+        //       fillColor: 'ff0000',
+        //       fillOpacity: 1,
+        //     })
+        //   )
+        // }
+        // function onMove(e) {
+        //   if (points.length > 0) {
+        //     ls = [points[points.length - 1], [e.latlng.lat, e.latlng.lng]]
+        //     // 用给定的地理位置数组代替更新折线中的所有点。
+        //     tempLines.setLatLngs(ls)
+        //     // 添加一个图层到图层组中
+        //     map.addLayer(tempLines)
+        //   }
+        // }
+
+        // function onDoubleClick(e) {
+        //   console.log(points)
+        //   // 将多边形添加到图层组中
+        //   L.polygon([points]).addTo(map)
+        //   points = []
+        //   lines = new L.polyline([])
+        // }
+
+        // 绘制矩形
+        // let rectangle
+        // let tmprec
+        // var points = []
+        // var lines = new L.polyline(points)
+        // const latlngs = []
+        // map.on('mousedown', onClick) //点击地图
+        // // map.on('mouseup', onDoubleClick)
+
+        // //map.off(....) 关闭该事件
+        // function onClick(e) {
+        //   console.log('onClick---->', e)
+        //   if (typeof tmprec != 'undefined') {
+        //     tmprec.remove()
+        //   }
+        //   //左上角坐标
+        //   latlngs[0] = [e.latlng.lat, e.latlng.lng]
+        //   //开始绘制，监听鼠标移动事件
+        //   map.on('mousemove', onMove)
+        // }
+        // function onMove(e) {
+        //   console.log('onMove---->', e)
+        //   latlngs[1] = [e.latlng.lat, e.latlng.lng]
+        //   //删除临时矩形
+        //   if (typeof tmprect != 'undefined') {
+        //     tmprect.remove()
+        //   }
+        //   //添加临时矩形
+        //   // tmprect = L.rectangle(latlngs, { dashArray: 5 }).addTo(map)
+        // }
+
+        // function onDoubleClick(e) {
+        //   console.log('onDoubleClick---->', e)
+        //   //矩形绘制完成，移除临时矩形，并停止监听鼠标移动事件
+        //   tmprect.remove()
+        //   map.off('mousemove')
+        //   //右下角坐标
+        //   latlngs[1] = [e.latlng.lat, e.latlng.lng]
+        //   rectangle = L.rectangle(latlngs, {
+        //     color: '#3300ff',
+        //     fillOpacity: 0,
+        //     weight: 2,
+        //   })
+        //   rectangle.addTo(map)
+        //   //调整view范围
+
+        //   map.fitBounds(latlngs)
+        // }
+
+
+        var startPoint = null;
+        var endPoint = null;
+        var rectangle = null;
+        var tips = null;
+        var layer = L.layerGroup()
+        var color = "#0D82D7"
+        // map.on('click', addRectangle);
+        map.on('mousedown', mousedown)
+        map.on('mouseup', mouseup)
+        // map.on('dblclick', onDoubleClick)
+        function mousedown(e) {
+          rectangle = null
+          tips = null
+          // 禁用处理程序
+          map.dragging.disable()
+          startPoint = e.latlng
+          console.log('startPoint---->', startPoint)
+          map.addLayer(
+            L.circle(e.latlng, {
+              color: '#ff0000',
+              fillColor: 'ff0000',
+              fillOpacity: 1,
+            })
+          )
+          map.addLayer()
+          map.on('mousemove', mousemove)
+        }
+        function mousemove(e) {
+          endPoint = e.latlng
+          console.log('endPoint---->', endPoint)
+          addRectangle()
+          map
+            .off('mousedown ', mousedown)
+            .on('mouseup', mouseup)
+        }
+        function mouseup(e) {
+          close() 
+          map.dragging.enable()
+          map
+            .off('mousemove', mousemove)
+            .off('mouseup', mouseup)
+            .off('mousedown', mousedown)
+        }
+        function addRectangle() {
+          destory()
+          var bounds = []
+          bounds.push(startPoint)
+          bounds.push(endPoint)
+          console.log(bounds)
+          // 矩形的类
+          rectangle = L.rectangle(bounds, {
+            color: color,
+            weight: 1,
+          })
+          // 将图层添加到给定的地图
+          rectangle.addTo(layer)
+
+          // 以LatLngBounds（地理点集）的形式返回polyline的边界  getBounds()
+          var northWestPoint = rectangle
+              .getBounds()
+              .getNorthWest(),
+            northEastPoint = rectangle
+              .getBounds()
+              .getNorthEast(),
+            southEastPoint = rectangle
+              .getBounds()
+              .getSouthEast()
+          var width = northWestPoint.distanceTo(northEastPoint) / 1000,
+            height = northEastPoint.distanceTo(southEastPoint) / 1000
+          console.log('宽', width)
+          console.log('高', height)
+          var area = Number(width) * Number(height)
+          addTips(area.toFixed(3))
+          // 将图层添加到给定的地图
+          layer.addTo(map)
+        }
+        function addTips(area) {
+          console.log('面积:' + area)
+          tips = L.circleMarker(endPoint, {
+            color: color,
+          })
+          tips.setRadius(1)
+          tips.bindTooltip('面积：' + area + '(平方公里)', {
+            // noHide: true,
+            direction: 'right',
+            // clickable: true,
+            className: 'leaflet-label-tffq',
+          })
+          console.log(tips)
+          tips.addTo(layer)
+        }
+        function close() {
+          var lab = tips.getTooltip()
+          var tt = document.createTextNode(
+            tips.getTooltip()._content
+          )
+          console.log(lab)
+          lab._container = ''
+          lab._container.appendChild(tt)
+          var span = document.createElement('span')
+          span.innerHTML = '【关闭】'
+          span.style.color = '#00ff40'
+          lab._container.appendChild(span)
+          L.DomEvent.addListener(span, 'click', function () {
+            destory()
+          })
+        }
+        function destory() {
+          console.log('destroy--->', rectangle)
+          console.log('destroy---》', tips)
+          if (rectangle)
+            // 从图层组中移除给定的图层
+            layer.removeLayer(rectangle)
+          if (tips)
+            layer.removeLayer(tips)
+        }
+        function onDoubleClick() {
+          L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
+          // tips.addTo(layer)
+        }
+      }
+    </script>
+  </body>
+</html>

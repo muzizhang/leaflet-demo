@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css" rel="stylesheet">
+  <title>Document</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #mapid { height: 100vh; }
+    .leaflet-right {
+      width: 100%;
+      height: 100%;
+    }
+    .leaflet-left {
+      z-index: 99999;
+    }
+  </style>
+</head>
+<body>
+  <div id="mapid"></div>
+  <script>
+    var map = L.map('mapid', {
+      minZoom: 3,
+      maxZoom: 18,
+      center: [0, 0],
+      zoom: 11,
+      attributionControl: false
+    });
+    // L.tileLayer("./img/企业微信截图_16000543948073.png").addTo(map);
+    L.Control.Watermark = L.Control.extend({
+      onAdd: function(map) {
+        var img = L.DomUtil.create('img');
+        img.src = './img/企业微信截图_16000543948073.png';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.margin = '0';
+        return img;
+      },
+      onRemove: function(map) {
+          // Nothing to do here
+      }
+    });
+    L.control.watermark = function(opts) {
+        return new L.Control.Watermark(opts);
+    }
+    L.control.watermark().addTo(map);
+  </script>
+</body>
+</html>

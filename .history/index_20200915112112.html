@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css" rel="stylesheet">
+  <title>Document</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #mapid { height: 100vh; }
+    /* .leaflet-right {
+      width: 100%;
+      height: 100%;
+    }
+    .leaflet-left {
+      z-index: 99999;
+    } */
+  </style>
+</head>
+<body>
+  <div id="mapid"></div>
+  <script>
+    var imageUrl = './img/timg.jpg';
+    let img = new Image();
+    img.src = imageUrl;
+    let width = 0;
+    let height = 0;
+    function gcd(width, height) {
+      console.log(!(width % height))
+      if (width % height) {
+        return gcd(height, width % height);
+      } else {
+        return height;
+      }
+    }
+    img.onload = function() {
+      console.log(img)
+      width = img.width;
+      height = img.height;
+      let n = gcd(width, height)
+      console.log(n)
+      console.log(width/n, height/n)
+      var imageBounds = [[`${width/n}.00`, `-${height/n}.00`], [`${width/n}.0${height/n}`, `-${height/n}.0${width/n}`]];
+      console.log(imageBounds)
+      var map = L.map('mapid', {
+        minZoom: 13,
+        maxZoom: 16,
+        center: [(parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2, (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2],
+        zoom: 14,
+        attributionControl: false
+      });
+      L.imageOverlay(imageUrl, imageBounds).addTo(map);
+    }
+    
+    
+  </script>
+</body>
+</html>

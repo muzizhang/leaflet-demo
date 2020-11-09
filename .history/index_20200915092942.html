@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css" rel="stylesheet">
+  <title>Document</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #mapid { height: 100vh; }
+    /* .leaflet-right {
+      width: 100%;
+      height: 100%;
+    }
+    .leaflet-left {
+      z-index: 99999;
+    } */
+  </style>
+</head>
+<body>
+  <div id="mapid"></div>
+  <script>
+    var map = L.map('mapid', {
+      minZoom: 13,
+      maxZoom: 18,
+      center: [40.850000, -74.850000],
+      zoom: 14,
+      attributionControl: false
+    });
+
+    var imageUrl = './img/企业微信截图_16000543948073.png';
+    let img = new Image();
+    img.src = imageUrl;
+    if (img.complete) {
+      console.log('from : complete - width:' + img.width + ', height:' + img.height);
+    } else {
+      img.onload = function() {
+      console.log('width:'+img.width+', height:'+img.height)
+    }
+    }
+    
+    var imageBounds = [[40.800000, -74.800000], [40.900000, -74.900000]];
+    L.imageOverlay(imageUrl, imageBounds).addTo(map);
+  </script>
+</body>
+</html>

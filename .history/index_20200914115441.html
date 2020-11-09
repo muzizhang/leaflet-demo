@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css" rel="stylesheet">
+  <title>Document</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+  <style>
+    #mapid { height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="mapid"></div>
+  <script>
+    var map = L.map('mapid', {
+      minZoom: 3,
+      maxZoom: 18,
+      // center: [31.5, 113.09],
+      zoom: 11,
+      attributionControl: false
+    });
+    L.tileLayer("./img/企业微信截图_16000543948073.png").addTo(map);
+  </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"
+    />
+    <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+  </head>
+  <body>
+    <div id="#map"></div>
+  </body>
+  <script>
+    // 获取图片的大小
+    var imageUrl = './img/企业微信截图_16000543948073.png'
+    let img = new Image()
+    img.src = imageUrl
+    let width = 0
+    let height = 0
+    function gcd(width, height) {
+      if (width % height) {
+        return gcd(height, width % height)
+      } else {
+        return height
+      }
+    }
+
+    img.onload = function () {
+      width = img.width
+      height = img.height
+      let n = gcd(width, height)
+      console.log(n)
+      console.log(width / n, height / n)
+      // 判断最大公约数的值
+      /*
+              为 1 则调用部分指定值
+             */
+      var imageBounds = []
+      if (n == 1) {
+        if (width / n - height / n > 300) {
+          imageBounds = [
+            [`8.00`, `-3.00`],
+            [`8.0${height / n}`, `-3.${width / n}`],
+          ]
+        } else {
+          imageBounds = [
+            [`8.00`, `-3.00`],
+            [`8.0${height / n}`, `-3.0${width / n}`],
+          ]
+        }
+      } else if (n > 0) {
+        imageBounds = [
+          [`${width / n}.00`, `-${height / n}.00`],
+          [`${width / n}.0${height / n}`, `-${height / n}.0${width / n}`],
+        ]
+      }
+
+      console.log(imageBounds)
+      var map = L.map('map', {
+        zoomSnap: 0.1,
+        minZoom: 13,
+        maxZoom: 16,
+        center: [
+          (parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2,
+          (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2,
+        ],
+        zoom: 14,
+        attributionControl: false,
+        drawControl: true,
+      })
+      console.log([
+        (parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2,
+        (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2,
+      ])
+      L.imageOverlay(imageUrl, imageBounds).addTo(map)
+
+      // 添加编辑工具栏
+      var drawnItems = new L.FeatureGroup()
+      map.addLayer(drawnItems)
+      var drawControl = new L.Control.Draw({
+        edit: {
+          featureGroup: drawnItems,
+        },
+      })
+      map.addControl(drawControl)
+    }
+  </script>
+</html>

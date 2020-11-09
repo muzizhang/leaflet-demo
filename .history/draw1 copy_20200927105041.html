@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <link
+      href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css"
+      rel="stylesheet"
+    /> -->
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"
+    /> -->
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script> -->
+    <link rel="stylesheet" href="./css/leaflet.css" />
+    <link rel="stylesheet" href="./css/leaflet.draw.css" />
+    <script src="./js/leaflet.js"></script>
+    <script src="./js/leaflet.draw.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+  <script>
+    // 获取图片的大小
+    // var imageUrl = 'http://27.128.198.12:98/files/map/image/7a4dd653eee7421c.jpg';
+    var imageUrl = 'img/企业微信截图_16000543948073.png'
+    // 新建一个image对象
+    // 注：获取图片的宽高 动态设置图片显示位置以及大小
+    let img = new Image()
+    img.src = imageUrl
+    let width = 0
+    let height = 0
+    // 计算最大公约数
+    // function gcd(width, height) {
+    //   if (width % height) {
+    //     return gcd(height, width % height)
+    //   } else {
+    //     return height
+    //   }
+    // }
+    // img.onload 图片属性的获取
+    img.onload = function () {
+      width = img.width
+      height = img.height
+      console.log(width, height)
+      // 公约数的值
+      // let n = gcd(width, height)
+      // console.log(n)
+      // console.log(width / n, height / n)
+      // 判断最大公约数的值
+      /*
+        为 1 则调用部分指定值
+      */
+      // var imageBounds = []
+      // if (n == 1) {
+      //   if (width / n - height / n > 300) {
+      //     imageBounds = [
+      //       [`8.00`, `-3.00`],
+      //       [`8.0${height / n}`, `-3.${width / n}`],
+      //     ]
+      //   } else {
+      //     imageBounds = [
+      //       [`8.00`, `-3.00`],
+      //       [`8.0${height / n}`, `-3.0${width / n}`],
+      //     ]
+      //   }
+      // } else if (n > 0) {
+      //   imageBounds = [
+      //     [`${width / n}.00`, `-${height / n}.00`],
+      //     [`${width / n}.0${height / n}`, `-${height / n}.0${width / n}`],
+      //   ]
+      // }
+      
+      const yx = L.latLng;
+      console.log(yx)
+      function xy(x, y) {
+        console.log(x, y)
+        if (L.Util.isArray(x)) {
+          return yx(x[1], x[0])
+        }
+        return yx(y, x)
+      }
+      console.log("width",width)
+      console.log("height",height)
+      console.log(xy(0, 0))
+      console.log(xy(-width / 2, -height / 2), xy(width / 2, height / 2))
+      var center0 = xy(-width / 2, -height / 2);
+      var center1 = xy(width / 2, height / 2);
+      // 初始化底图
+      var map = L.map('map', {
+        // zoomSnap: 0.1,
+        minZoom: 1,
+        maxZoom: 16,
+        // center: [
+        //   (parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2,
+        //   (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2,
+        // ],
+        center: [0, 0],
+        zoom: 1,
+        // maxBounds:[xy(-width / 2, -height / 2), xy(width / 2, height / 2)]
+        // attributionControl: false,
+        // drawControl: true,
+      })
+      console.log(xy(-width / 2, -height / 2), xy(width / 2, height / 2))
+      // 自定义底图图片
+      L.imageOverlay(imageUrl, [xy(-width / 2, -height / 2), xy(width / 2, height / 2)]).addTo(map)
+
+//       var infinova={
+//   "id": "fcc14adaecbf11eaa005509a4c78dfec",
+//   "mapId": "ddfd9733ecbf11eaa005509a4c78dfec",
+//   "type": 0,
+//   "parsedData": {
+//    "features": [{
+//     "geometry": {
+//      "coordinates": [
+//       [
+//        [-345.529682, -156.694567],
+//        [-340.998393, -150.993477],
+//        [-188.011606, -230.932083],
+//        [-192.513213, -237.937455],
+//        [-345.529682, -156.694567]
+//       ]
+//      ],
+//      "type": "Polygon"
+//     },
+//     "type": "Feature",
+//     "properties": {
+//      "areaId": "a423a654d6f511ea97fa509a4c78dfec",
+//      "color": "#3388ff",
+//      "name": "\u62a4\u680f\u57fa\u5751\u533a170",
+//      "id": "a2cbace7-acce-91f7-91f3-9cb46621da22"
+//     }
+//    }, {
+//     "geometry": {
+//      "coordinates": [
+//       [
+//        [37.030533, -160.011895],
+//        [32.528926, -154.002302],
+//        [87.976966, -122.02686],
+//        [93.47893, -126.037987],
+//        [37.030533, -160.011895]
+//       ]
+//      ],
+//      "type": "Polygon"
+//     },
+//     "type": "Feature",
+//     "properties": {
+//      "areaId": "fae0c80ed6f411ea97fa509a4c78dfec",
+//      "color": "#3388ff",
+//      "name": "\u897f\u5317\u89d2\u57fa\u5751152",
+//      "id": "0395cd3a-ca75-3d00-7ebb-82876e870f9a"
+//     }
+//    }],
+//    "type": "FeatureCollection"
+//   }
+//  }
+      // 添加一个矩形
+      /* 
+        .bindTooltip  绑定显示文字
+        .openTooltip  默认打开
+       */
+      var polygon1 = L.polygon([
+      [37.030533, -160.011895],
+       [32.528926, -154.002302],
+       [87.976966, -122.02686],
+       [93.47893, -126.037987],
+       [37.030533, -160.011895],
+      ])
+        .bindTooltip("/\u897f/\u5317/\u89d2/\u57fa/\u5751152", {
+          direction: 'center', // 文字显示位置
+          permanent: true, // 是否永久打开tooltip提示，仅在鼠标悬停时显示。   默认值：false
+        })
+        .openTooltip()
+
+      // 添加一个多边形
+      var polygon2 = L.polygon([
+      [-345.529682, -156.694567],
+       [-340.998393, -150.993477],
+       [-188.011606, -230.932083],
+       [-192.513213, -237.937455],
+       [-345.529682, -156.694567]
+      ])
+        .bindTooltip('\u62a4\u680f\u57fa\u5751\u533a170', {
+          direction: 'center',
+          permanent: true,
+        })
+        .openTooltip()
+      // 给多边形添加事件
+      // contextmenu：右击事件
+      polygon1.on('click', onClick).on('contextmenu', contextmenu)
+      polygon2.on('click', onClick).on('contextmenu', contextmenu)
+
+      // 点击事件
+      function onClick(e) {
+        console.log(e)
+      }
+      // 右击事件
+      function contextmenu(e) {
+        console.log(e)
+      }
+
+      // 自定义图标
+      var MyCustomMarker = L.Icon.extend({
+        options: {
+          iconUrl: './img/OIP.jpg',
+          shadowUrl: null,
+          iconAnchor: new L.Point(12, 12),
+          iconSize: new L.Point(64, 64),
+        },
+      })
+
+      // 添加编辑工具栏
+      // FeatureGroup：可编辑和删除的图层组   可为0或空
+      var drawnItems = new L.FeatureGroup([polygon1, polygon2])
+      map.addLayer(drawnItems)
+      // 自定义工具栏
+      var drawControl = new L.Control.Draw({
+        // 控制图标的显示
+        draw: {
+          marker: {
+            icon: new MyCustomMarker(),
+          },
+        },
+        // 编辑
+        edit: {
+          featureGroup: drawnItems,
+        },
+      })
+      // 添加控件到地图上
+      map.addControl(drawControl)
+      // 创建之后进行保存
+      map.on(L.Draw.Event.CREATED, function (e) {
+        var layer = e.layer
+        layer
+          .bindTooltip('my tooltip text', {
+            direction: 'center',
+            permanent: true,
+          })
+          .openTooltip()
+          .on('click', onClick)
+          .on('contextmenu', contextmenu)
+        // 将画的图形添加到图层中
+        drawnItems.addLayer(layer)
+      })
+      // 编辑开始
+      map.on(L.Draw.Event.EDITSTART, function (e) {
+        var layers = e.layers
+        console.log('editstart--->', e)
+        console.log('editstart--->', layers)
+      })
+      // 编辑之后进行保存
+      map.on(L.Draw.Event.EDITED, function (e) {
+        var layers = e.layers
+        console.log('edit--->', e)
+        console.log('edit--->', layers)
+      })
+      // 刚从地图上编辑的所有图层的列表。在折线或多边形上编辑顶点时触发。
+      map.on(L.Draw.Event.EDITVERTEX, function (e) {
+        console.log(e)
+        console.log('drawEditVertex---->', e.layers)
+      })
+    }
+  </script>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"
+    />
+    <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100vh;
+      }
+      /* .leaflet-right {
+        width: 100%;
+        height: 100%;
+      }
+      .leaflet-left {
+        z-index: 99999;
+      } */
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+  <script>
+    // 获取图片的大小
+    var imageUrl = './img/企业微信截图_16000543948073.png'
+    let img = new Image()
+    img.src = imageUrl
+    let width = 0
+    let height = 0
+    function gcd(width, height) {
+      if (width % height) {
+        return gcd(height, width % height)
+      } else {
+        return height
+      }
+    }
+
+    img.onload = function () {
+      width = img.width
+      height = img.height
+      let n = gcd(width, height)
+      console.log(n)
+      console.log(width / n, height / n)
+      // 判断最大公约数的值
+      /*
+              为 1 则调用部分指定值
+             */
+      var imageBounds = []
+      if (n == 1) {
+        if (width / n - height / n > 300) {
+          imageBounds = [
+            [`8.00`, `-3.00`],
+            [`8.0${height / n}`, `-3.${width / n}`],
+          ]
+        } else {
+          imageBounds = [
+            [`8.00`, `-3.00`],
+            [`8.0${height / n}`, `-3.0${width / n}`],
+          ]
+        }
+      } else if (n > 0) {
+        imageBounds = [
+          [`${width / n}.00`, `-${height / n}.00`],
+          [`${width / n}.0${height / n}`, `-${height / n}.0${width / n}`],
+        ]
+      }
+      var map = L.map('map', {
+        zoomSnap: 0.1,
+        minZoom: 13,
+        maxZoom: 16,
+        center: [
+          (parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2,
+          (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2,
+        ],
+        zoom: 14,
+        // attributionControl: false,
+        // drawControl: true,
+      })
+      // 自定义图片
+      L.imageOverlay(imageUrl, imageBounds).addTo(map)
+
+      // 添加一个矩形
+      var polygon = L.polygon([
+        [8.037898333415072, -3.071537017822266],
+        [8.047898333415072, -3.071537017822266],
+        [8.047898333415072, -3.081537017822266],
+        [8.037898333415072, -3.081537017822266],
+      ])
+        .addTo(map)
+        .bindTooltip('my tooltip text', {
+          direction: 'center',
+          permanent: true,
+        })
+        .openTooltip()
+
+      // 添加一个多边形
+      var polygon = L.polygon([
+        [8.037728358438901, -3.0457019805908208],
+        [8.036113592614111, -3.029909133911133],
+        [8.026679832317008, -3.0380630493164067]
+      ])
+        .addTo(map)
+        .bindTooltip('my tooltip text', {
+          direction: 'center',
+          permanent: true,
+        })
+        .openTooltip()
+
+      map.on('click', onClick)
+      function onClick(e) {
+        console.log(e)
+      }
+      // 添加编辑工具栏
+      var drawnItems = new L.FeatureGroup()
+      map.addLayer(drawnItems)
+      var drawControl = new L.Control.Draw({
+        draw: {
+          marker: false
+        },
+        edit: {
+          featureGroup: drawnItems,
+        },
+      })
+      map.addControl(drawControl)
+      // 创建之后进行保存
+      map.on(L.Draw.Event.CREATED, function (e) {
+        var layer = e.layer
+        console.log(e)
+        // let tooltip = L.tooltip({
+        //   direction: 'center',
+        //   permanent: true
+        // }, layer).bindTooltip("my tooltip text").openTooltip();
+        layer
+          .bindTooltip('my tooltip text', {
+            direction: 'center',
+            permanent: true,
+          })
+          .openTooltip()
+        drawnItems.addLayer(layer)
+      })
+      // 编辑之后进行保存
+      map.on(L.Draw.Event.EDITED, function (e) {
+        var layers = e.layers,
+          content = null
+        console.log('edit--->', e)
+        layers.eachLayer(function (layer) {
+          content = '128945'
+          if (content !== null) {
+            layer.setPopupContent(content)
+          }
+        })
+      })
+    }
+  </script>
+</html>

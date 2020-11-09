@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #mapid {
+        height: 100vh;
+      }
+      /* .leaflet-right {
+      width: 100%;
+      height: 100%;
+    }
+    .leaflet-left {
+      z-index: 99999;
+    } */
+    </style>
+  </head>
+  <body>
+    <div id="mapid"></div>
+    <script>
+      // 获取图片的大小
+      var imageUrl = './img/企业微信截图_16000543948073.png'
+      let img = new Image()
+      img.src = imageUrl
+      let width = 0
+      let height = 0
+      function gcd(width, height) {
+        if (width % height) {
+          return gcd(height, width % height)
+        } else {
+          return height
+        }
+      }
+
+      img.onload = function () {
+        width = img.width
+        height = img.height
+        let n = gcd(width, height)
+        console.log(n)
+        console.log(width / n, height / n)
+        // 判断最大公约数的值
+        /*
+              为 1 则调用部分指定值
+             */
+        var imageBounds = []
+        if (n == 1) {
+          if (width / n - height / n > 300) {
+            imageBounds = [
+              [`8.00`, `-3.00`],
+              [`8.0${height / n}`, `-3.${width / n}`],
+            ]
+          } else {
+            imageBounds = [
+              [`8.00`, `-3.00`],
+              [`8.0${height / n}`, `-3.0${width / n}`],
+            ]
+          }
+        } else if (n > 0) {
+          imageBounds = [
+            [`${width / n}.00`, `-${height / n}.00`],
+            [`${width / n}.0${height / n}`, `-${height / n}.0${width / n}`],
+          ]
+        }
+
+        console.log(imageBounds)
+        var map = L.map('mapid', {
+          zoomSnap: 0.1,
+          minZoom: 13,
+          maxZoom: 16,
+          center: [
+            (parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2,
+            (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2,
+          ],
+          zoom: 14,
+          attributionControl: false,
+          renderer: L.canvas(),
+        })
+        console.log([
+          (parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2,
+          (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2,
+        ])
+        L.imageOverlay(imageUrl, imageBounds).addTo(map)
+
+        // 画点
+        // map.on('click',function(e){
+        //   L.circle(e.latlng,{radius:100,color:'red',fillColor:'red',fillOpacity:1}).addTo(map)
+        // })
+        // 绘制一个任意半径的圆
+        // var r = 0;
+        // var i = null;
+        // var tempCircle = new L.circle()
+        // map.on('mousedown', onmouseDown)
+        // map.on('mouseup',onmouseUp);
+        // map.on('mousemove',onMove)
+
+        // function onmouseDown(e)
+        // {
+        //     i=e.latlng
+        //     //确定圆心
+        // }
+        // function onMove(e) {
+        //     if(i) {
+        //         r = L.latLng(e.latlng).distanceTo(i)
+        //         tempCircle.setLatLng(i)
+        //         tempCircle.setRadius(r)
+        //         tempCircle.setStyle({color:'#ff0000',fillColor:'#ff0000',fillOpacity:1})
+        //         map.addLayer(tempCircle)
+
+        //     }
+        // }
+
+        // function onmouseUp(e)
+        // {
+        //     r = L.latLng(e.latlng).distanceTo(i)//计算半径
+        //     L.circle(i,{radius:r,color:'#ff0000',fillColor:'#ff0000',fillOpacity:1}).addTo(map)
+        //     i=null
+        //     r=0
+        // }
+
+        // 绘线
+        // var points = [],geometry=[]
+        // var lines = new L.polyline(points)
+        // var tempLines = new L.polyline([])
+        // map.on('click', onClick);    //点击地图
+        // map.on('dblclick', onDoubleClick);
+        // function onClick(e) {
+        //   points.push([e.latlng.lat, e.latlng.lng])
+        //   lines.addLatLng(e.latlng)
+        //   map.addLayer(lines)
+        //   const node=L.circle(e.latlng, { color: '#ff0000', fillColor: 'ff0000', fillOpacity: 1 })
+        //   map.addLayer(node)
+        //   geometry.push(node)
+        //   map.on('mousemove', onMove)//双击地图
+
+        // }
+        // function onMove(e) {
+        //   if (points.length > 0) {
+        //       ls = [points[points.length - 1], [e.latlng.lat, e.latlng.lng]]
+        //       tempLines.setLatLngs(ls)
+        //       map.addLayer(tempLines)
+        //   }
+        // }
+
+        // function onDoubleClick(e) {
+        //   geometry.push(L.polyline(points).addTo(map))
+        //   points = []
+        //   lines.remove();
+        //   map.off('mousemove')
+        //   tempLines.remove();
+        // }
+
+        // 绘制多边形
+        // var points = [],
+        //   geometry = []
+        // var lines = new L.polyline(points)
+        // var tempLines = new L.polyline([], { dashArray: 5 })
+
+        // map.on('click', onClick) //点击地图
+        // map.on('dblclick', onDoubleClick)
+        // map.on('mousemove', onMove) //双击地图
+
+        // //map.off(....) 关闭该事件
+
+        // function onClick(e) {
+        //   points.push([e.latlng.lat, e.latlng.lng])
+        //   lines.addLatLng(e.latlng)
+        //   map.addLayer(tempLines)
+        //   map.addLayer(lines)
+        //   const node = L.circle(e.latlng, {
+        //     color: '#ff0000',
+        //     fillColor: 'ff0000',
+        //     fillOpacity: 1,
+        //   })
+        //   map.addLayer(node)
+        //   geometry.push(node)
+        // }
+        // function onMove(e) {
+        //   if (points.length > 0) {
+        //     ls = [
+        //       points[points.length - 1],
+        //       [e.latlng.lat, e.latlng.lng],
+        //       points[0],
+        //     ]
+        //     tempLines.setLatLngs(ls)
+        //     // map.addLayer(tempLines)
+        //   }
+        // }
+
+        // function onDoubleClick(e) {
+        //   geometry.push(L.polygon(points).addTo(map))
+        //   points = []
+        //   //map.removeLayer(tempLines)
+        //   //tempLines.remove()
+        //   lines.remove()
+        //   tempLines.remove()
+        //   lines = new L.polyline([])
+        // }
+
+        // var points = []
+        // var lines = new L.polyline([])
+        // var tempLines = new L.polyline([])
+        // map.on('click', onClick) //点击地图
+        // map.on('dblclick', onDoubleClick)
+        // map.on('mousemove', onMove) //双击地图
+
+        // function onClick(e) {
+        //   points.push([e.latlng.lat, e.latlng.lng])
+        //   lines.addLatLng(e.latlng)
+        //   map.addLayer(lines)
+        //   map.addLayer(
+        //     L.circle(e.latlng, {
+        //       color: '#ff0000',
+        //       fillColor: 'ff0000',
+        //       fillOpacity: 1,
+        //     })
+        //   )
+        // }
+        // function onMove(e) {
+        //   if (points.length > 0) {
+        //     ls = [points[points.length - 1], [e.latlng.lat, e.latlng.lng]]
+        //     tempLines.setLatLngs(ls)
+        //     map.addLayer(tempLines)
+        //   }
+        // }
+
+        // function onDoubleClick(e) {
+        //   L.polygon([points]).addTo(map)
+        //   points = []
+        //   lines = new L.polyline([])
+        // }
+
+        // 绘制矩形
+        // let rectangle
+        // let tmprec
+        // var points = []
+        // var lines = new L.polyline(points)
+        // const latlngs = []
+        // map.on('mousedown', onClick) //点击地图
+        // // map.on('mouseup', onDoubleClick)
+
+        // //map.off(....) 关闭该事件
+        // function onClick(e) {
+        //   console.log('onClick---->', e)
+        //   if (typeof tmprec != 'undefined') {
+        //     tmprec.remove()
+        //   }
+        //   //左上角坐标
+        //   latlngs[0] = [e.latlng.lat, e.latlng.lng]
+        //   //开始绘制，监听鼠标移动事件
+        //   map.on('mousemove', onMove)
+        // }
+        // function onMove(e) {
+        //   console.log('onMove---->', e)
+        //   latlngs[1] = [e.latlng.lat, e.latlng.lng]
+        //   //删除临时矩形
+        //   if (typeof tmprect != 'undefined') {
+        //     tmprect.remove()
+        //   }
+        //   //添加临时矩形
+        //   // tmprect = L.rectangle(latlngs, { dashArray: 5 }).addTo(map)
+        // }
+
+        // function onDoubleClick(e) {
+        //   console.log('onDoubleClick---->', e)
+        //   //矩形绘制完成，移除临时矩形，并停止监听鼠标移动事件
+        //   tmprect.remove()
+        //   map.off('mousemove')
+        //   //右下角坐标
+        //   latlngs[1] = [e.latlng.lat, e.latlng.lng]
+        //   rectangle = L.rectangle(latlngs, {
+        //     color: '#3300ff',
+        //     fillOpacity: 0,
+        //     weight: 2,
+        //   })
+        //   rectangle.addTo(map)
+        //   //调整view范围
+
+        //   map.fitBounds(latlngs)
+        // }
+
+        // 添加区域
+        // function addRectArea() {
+        //   var that = this
+        //   var map = that.$store.state.map //获取已保存的地图
+        //   if (that.stopRectArea != null) {
+        //     //stopRectArea在data中定义，清除重复的拉框操作
+        //     map.off('mousedown', that.stopRectArea.mousedown)
+        //   }
+          var locations;
+          var allLocations;
+          var stopRectArea;
+          var rectangleMeasure = {
+            startPoint: null,
+            endPoint: null,
+            rectangle: null,
+            layer: L.layerGroup(),
+            color: 'red',
+            addRectangle: function () {
+              rectangleMeasure.destory()
+              var bounds = []
+              bounds.push(rectangleMeasure.startPoint)
+              bounds.push(rectangleMeasure.endPoint)
+              rectangleMeasure.rectangle = L.rectangle(bounds, {
+                color: rectangleMeasure.color,
+                weight: 1,
+              })
+              rectangleMeasure.rectangle.addTo(rectangleMeasure.layer)
+
+              var northWestPoint = rectangleMeasure.rectangle
+                  .getBounds()
+                  .getNorthWest(),
+                northEastPoint = rectangleMeasure.rectangle
+                  .getBounds()
+                  .getNorthEast(),
+                southEastPoint = rectangleMeasure.rectangle
+                  .getBounds()
+                  .getSouthEast()
+              var width = northWestPoint.distanceTo(northEastPoint) / 1000,
+                height = northEastPoint.distanceTo(southEastPoint) / 1000
+              var area = Number(width) * Number(height)
+              rectangleMeasure.layer.addTo(map)
+            },
+            mousedown: function (e) {
+              rectangleMeasure.rectangle = null
+              map.dragging.disable()
+              rectangleMeasure.startPoint = e.latlng
+              map.on('mousemove', rectangleMeasure.mousemove)
+            },
+            mousemove: function (e) {
+              rectangleMeasure.endPoint = e.latlng
+              rectangleMeasure.addRectangle()
+              map
+                .off('mousedown ', rectangleMeasure.mousedown)
+                .on('mouseup', rectangleMeasure.mouseup)
+            },
+            mouseup: function (e) {
+              map.dragging.enable()
+              map
+                .off('mousemove', rectangleMeasure.mousemove)
+                .off('mouseup', rectangleMeasure.mouseup)
+              locations = {} //locations在data中定义
+              locations['leftX'] = rectangleMeasure.startPoint.lat
+              locations['leftY'] = rectangleMeasure.startPoint.lng
+              locations['rightX'] = rectangleMeasure.endPoint.lat
+              locations['rightY'] = rectangleMeasure.endPoint.lng
+              locations['layer_id'] = rectangleMeasure.layer._leaflet_id
+              locations['layer'] = rectangleMeasure.layer
+              locations['rectangle'] = rectangleMeasure.rectangle
+              //在此处对数据进行处理（1）...
+            },
+            destory: function () {
+              if (rectangleMeasure.rectangle)
+                rectangleMeasure.layer.removeLayer(rectangleMeasure.rectangle)
+            },
+          }
+          that.stopRectArea = rectangleMeasure //记录已点击拉框按钮，未在地图上拉框
+          map.on('mousedown', rectangleMeasure.mousedown) //在地图上拉框
+        // }
+        //清除框选
+        function clearFrame() {
+          var that = this
+          if (that.stopRectArea != null) {
+            var map = that.$store.state.map
+            map.off('mousedown', that.stopRectArea.mousedown)
+          }
+          //清除选框
+          for (var i in that.allLocations) {
+            //将（1）处保存框选图层数据，在此处删除图层
+            that.allLocations[i].layer.removeLayer(
+              that.allLocations[i].rectangle
+            )
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

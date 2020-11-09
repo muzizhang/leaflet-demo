@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css" rel="stylesheet">
+  <title>Document</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #mapid {
+      height: 100vh;
+    }
+    /* .leaflet-right {
+      width: 100%;
+      height: 100%;
+    }
+    .leaflet-left {
+      z-index: 99999;
+    } */
+  </style>
+</head>
+<body>
+  <div id="mapid"></div>
+  <script>
+    // 获取图片的大小
+    var imageUrl = './img/企业微信截图_16000543948073.png';
+    let img = new Image();
+    img.src = imageUrl;
+    let width = 0;
+    let height = 0;
+    function gcd(width, height) {
+      if (width % height) {
+        return gcd(height, width % height);
+      } else {
+        return height;
+      }
+    }
+    let rectangle;
+    let tmprec;
+    const latlngs = [];
+    img.onload = function() {
+      width = img.width;
+      height = img.height;
+      let n = gcd(width, height)
+      console.log(n)
+      console.log(width/n, height/n)
+      // 判断最大公约数的值
+      /* 
+        为 1 则调用部分指定值
+       */
+      var imageBounds = [];
+      if (n == 1) {
+        if (width/n - height/n > 300) {
+          imageBounds = [[`8.00`, `-3.00`], [`8.0${height/n}`, `-3.${width/n}`]];
+        } else {
+          imageBounds = [[`8.00`, `-3.00`], [`8.0${height/n}`, `-3.0${width/n}`]];
+        }
+      } else if (n > 0) {
+        imageBounds = [[`${width/n}.00`, `-${height/n}.00`], [`${width/n}.0${height/n}`, `-${height/n}.0${width/n}`]];
+      }
+      
+      console.log(imageBounds)
+      var map = L.map('mapid', {
+        zoomSnap: 0.1,
+        minZoom: 13,
+        maxZoom: 16,
+        center: [(parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2, (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2],
+        zoom: 14,
+        attributionControl: false,
+        renderer: L.canvas()
+      });
+      console.log([(parseFloat(imageBounds[0][0]) + parseFloat(imageBounds[1][0])) / 2, (parseFloat(imageBounds[0][1]) + parseFloat(imageBounds[1][1])) / 2])
+      L.imageOverlay(imageUrl, imageBounds).addTo(map);
+      map.on('mousedown', onClick);
+      map.on('mouseup', onDoubleClick);
+      function onClick(e) {
+        if (typeof tmprec != 'undefined') {
+          tmprec.remove() 
+        }
+        console.log(e)
+        //左上角坐标
+        latlngs[0]=[e.latlng.lat,e.latlng.lng]
+        //开始绘制，监听鼠标移动事件
+        map.on('mousemove',onMove)
+      }
+      function onMove(e) {
+        latlngs[1]=[e.latlng.lat,e.latlng.lng]
+        //删除临时矩形
+        if (typeof tmprect!='undefined'){
+            tmprect.remove()
+        }
+        //添加临时矩形
+        tmprect=L.rectangle(latlngs,{dashArray:5}).addTo(map)
+      }
+
+      function onDoubleClick(e){
+          //矩形绘制完成，移除临时矩形，并停止监听鼠标移动事件
+          tmprect.remove()
+          map.off('mousemove')
+          //右下角坐标
+          latlngs[1]=[e.latlng.lat,e.latlng.lng]
+          rectangle=L.rectangle(latlngs,{
+              color:'#3300ff',
+              fillOpacity:0,
+              weight:2
+          })
+          rectangle.addTo(map)
+          //调整view范围
+
+          map.fitBounds(latlngs)
+      }
+    }
+    
+  </script>
+</body>
+</html>
